@@ -1,0 +1,38 @@
+---
+- name: "Check if we can log in."
+  uri:
+    url: https://localhost/artifactory/api/users
+    user: admin
+    password: "{{ artifactory_role_admin_pass_default_inh }}"
+    validate_certs: False
+    force_basic_auth: yes
+  register: result
+  ignore_errors: true
+
+- name: "Show result of above"
+  debug:
+    msg: "{{ result }}"
+
+- name: "Change admin password if required."
+  uri:
+    url: https://localhost/artifactory/api/security/users/authorization/changePassword
+    method: POST
+    user: "admin"
+    password: "{{ artifactory_role_admin_pass_default_inh }}"
+    body:
+      userName: admin
+      oldPassword: "{{ artifactory_role_admin_pass_default_inh }}"
+      newPassword1: "{{ artifactory_role_admin_pass_inh }}"
+      newPassword2: "{{ artifactory_role_admin_pass_inh }}"
+    headers:
+      Content-Type: "application/json"
+    validate_certs: False
+    body_format: json
+    force_basic_auth: yes
+  register: changedstatus
+  when: result.failed == false
+  changed_when: changedstatus.status == 200
+
+- name: "Show if we changed the password:"
+  debug:
+    msg: "{{ changedstatus }}"

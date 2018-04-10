@@ -1,0 +1,38 @@
+---
+- name: "Apply main config template"
+  command: cp -fp /etc/opt/jfrog/artifactory/artifactory.config.import.xml.template /etc/opt/jfrog/artifactory/artifactory.config.import.xml
+  listen: "apply main config template"
+
+- name: "Apply security config template"
+  command: cp -fp /etc/opt/jfrog/artifactory/security.import.xml.template /etc/opt/jfrog/artifactory/security.import.xml
+  listen: "apply security config template"
+
+- name: 'start artifactory'
+  become: yes
+  service:
+    name: artifactory
+    state: started
+  tags:
+    - artifactory
+    - init
+
+- name: 'restart artifactory'
+  become: yes
+  service:
+    name: artifactory
+    state: restarted
+  tags:
+    - artifactory
+  listen: "restart artifactory"
+
+- name: 'check nginx config'
+  command: nginx -t
+  tags:
+    - artifactory
+
+- name: 'Restart nginx'
+  service:
+    name: nginx
+    status: restarted
+  tags:
+    - artifactory

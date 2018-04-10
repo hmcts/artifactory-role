@@ -1,0 +1,59 @@
+
+        {% for repo in artifactory_role_generic_remote_repos %}
+        <remoteRepository>
+            <key>{{ repo.key }}</key>
+            <type>generic</type>
+            <includesPattern>**/*</includesPattern>
+            <repoLayoutRef>simple-default</repoLayoutRef>
+            <dockerApiVersion>V2</dockerApiVersion>
+            <forceNugetAuthentication>false</forceNugetAuthentication>
+            <blackedOut>false</blackedOut>
+            <handleReleases>true</handleReleases>
+            <handleSnapshots>true</handleSnapshots>
+            <maxUniqueSnapshots>0</maxUniqueSnapshots>
+            <maxUniqueTags>0</maxUniqueTags>
+            <suppressPomConsistencyChecks>true</suppressPomConsistencyChecks>
+            <propertySets>
+                <propertySetRef>artifactory</propertySetRef>
+            </propertySets>
+            <archiveBrowsingEnabled>false</archiveBrowsingEnabled>
+            <url>{{ repo.url }}</url>
+            <offline>false</offline>
+            <hardFail>false</hardFail>
+            <storeArtifactsLocally>false</storeArtifactsLocally>
+            <fetchJarsEagerly>false</fetchJarsEagerly>
+            <fetchSourcesEagerly>false</fetchSourcesEagerly>
+            <retrievalCachePeriodSecs>600</retrievalCachePeriodSecs>
+            <assumedOfflinePeriodSecs>300</assumedOfflinePeriodSecs>
+            <missedRetrievalCachePeriodSecs>1800</missedRetrievalCachePeriodSecs>
+            <remoteRepoChecksumPolicyType>generate-if-absent</remoteRepoChecksumPolicyType>
+            <unusedArtifactsCleanupPeriodHours>0</unusedArtifactsCleanupPeriodHours>
+            <shareConfiguration>false</shareConfiguration>
+            <synchronizeProperties>false</synchronizeProperties>
+            <listRemoteFolderItems>true</listRemoteFolderItems>
+            <rejectInvalidJars>false</rejectInvalidJars>
+            <contentSynchronisation>
+                <enabled>false</enabled>
+                <statistics>
+                    <enabled>false</enabled>
+                </statistics>
+                <properties>
+                    <enabled>false</enabled>
+                </properties>
+                <source>
+                    <originAbsenceDetection>false</originAbsenceDetection>
+                </source>
+            </contentSynchronisation>
+            <blockMismatchingMimeTypes>true</blockMismatchingMimeTypes>
+            <mismatchingMimeTypesOverrideList></mismatchingMimeTypesOverrideList>
+            {% if repo.password is defined %}
+            <password>{{ repo.password }}</password>
+            {% endif %}
+            <allowAnyHostAuth>false</allowAnyHostAuth>
+            <socketTimeoutMillis>15000</socketTimeoutMillis>
+            <enableCookieManagement>false</enableCookieManagement>
+            <enableTokenAuthentication>false</enableTokenAuthentication>
+            <proxyRef>default</proxyRef>
+            <propagateQueryParams>false</propagateQueryParams>
+        </remoteRepository>
+        {% endfor %}

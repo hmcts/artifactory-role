@@ -1,0 +1,12 @@
+---
+# not in use, destructive action
+- name: Empty the trash completely
+  uri:
+    url: https://localhost/artifactory/api/trash/empty
+    method: POST
+    user: admin
+    password: "{{ artifactory_role_admin_pass_inh }}"
+    validate_certs: False
+    status_code: 202
+    timeout: 560
+  register: trashstatus

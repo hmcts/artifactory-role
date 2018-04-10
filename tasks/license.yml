@@ -1,0 +1,30 @@
+---
+- name: "Get the currently installed license."
+  uri:
+    url: https://localhost/artifactory/api/system/license
+    user: admin
+    password: "{{ artifactory_role_admin_pass_inh }}"
+    validate_certs: False
+  register: currentlicense
+
+- name: "Print current license validThrough date"
+  debug:
+    msg: "{{ currentlicense }}"
+
+- name: "Print date we expect current license to be, set in role"
+  debug:
+    msg: "{{ artifactory_license_date }}"
+
+- name: "Add license if required."
+  uri:
+    url: https://localhost/artifactory/api/system/license
+    method: POST
+    user: "admin"
+    password: "{{ artifactory_role_admin_pass_inh }}"
+    body:
+      licenseKey: "{{ artifactory_role_license_inh }}"
+    validate_certs: False
+    body_format: json
+  register: licensestatus
+  when: "artifactory_license_date|string not in currentlicense.json.validThrough"
+  ignore_errors: true

@@ -1,0 +1,51 @@
+---
+# Test playbook for molecule to run through.
+- hosts: all
+  become: true
+  tasks:
+    - name: Install openssl
+      yum:
+        name: openssl
+        state: present
+    - name: Install selinux-python stuff
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - libselinux-python
+        - libsemanage-python
+    - name: Add test certificate
+      command: "openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout /hmcts.key -out  /hmcts.crt -subj /CN=artifactorytest.local -days 3650"
+      args:
+        creates: "/hmcts.*"
+    - name: slurp certificate
+      slurp:
+        src: /hmcts.crt
+      register: crtslurp
+    - name: slurp key
+      slurp:
+        src: /hmcts.key
+      register: keyslurp
+- hosts: all
+  become: true
+  vars:
+    ssl_crt: "{{ crtslurp['content'] | b64decode }}"
+    ssl_key: "{{ keyslurp['content'] | b64decode }}"
+    artifactory_xms_java_options: "-Xms1g"
+    artifactory_xmx_java_options: "-Xmx2g"
+    artifactory_role_admin_pass: "SuperPasswordForTestingPlaybook1"
+    artifactory_role_admin_pass_default: "password"
+    artifactory_role_license: "Pretty much nonsense can go here."
+    artifactory_role_local_repos:
+      - key: rpm-local
+        yumRootDepth: 0
+    artifactory_role_proxy_vhosts:
+      - servername: rpm-remote.artifactory.reform.hmcts.net
+        filename: rpm-remote
+        proxydest: http://mirror.centos.org/centos/
+    artifactory_role_remote_repos:
+      - key: rpm-remote
+        url: http://mirror.centos.org/centos
+  roles:
+    - role: java-role
+    - role: artifactory-role

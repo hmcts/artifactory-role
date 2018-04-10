@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Reform Devops
+  description: Quick Artifactory Role
+  company: HMCTS
+  license: MIT
+  min_ansible_version: 1.7
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  galaxy_tags:
+  - development
+  - packaging
+  - web
+dependencies:
+  - { role: devops.repos }

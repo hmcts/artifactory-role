@@ -1,0 +1,93 @@
+---
+- name: "Scan for unused disks and register"
+  shell: |
+    ACTIVELVMDISKS=( $(pvs --noheadings --separator "" | sed 's# ##g' | cut -c-8 | sort -u) )
+
+    ACTIVESTATICDISKS=( $(mount | grep "/dev/" | grep -v "mapper" | cut -c-8 | grep "/dev/" | sort -u) )
+
+    ACTIVEDISKS=( $(echo ${ACTIVELVMDISKS[@]} ${ACTIVESTATICDISKS[@]} | tr ' ' '\n' | sort -u) )
+
+    ALLDISKS=( $(lsblk -pdn | awk '{print $1}' | grep -v 'sr0\|fd0' | uniq) )
+
+    echo ${ACTIVEDISKS[@]} ${ALLDISKS[@]} | tr ' ' '\n' | sort | uniq -u
+  register: discovereddisks
+  changed_when: "'dev' in discovereddisks.stdout"
+
+- name: "Print discovered disks"
+  debug:
+    msg: "{{ discovereddisks }}"
+
+- name: "Print first disk in array"
+  debug:
+    msg: "{{ discovereddisks.stdout_lines.0 }}"
+  when: "'dev' in discovereddisks.stdout"
+
+- name: "Add partition to configure"
+  parted:
+    device: "{{ discovereddisks.stdout }}"
+    number: 1
+    state: present
+    label: gpt
+  when: "'dev' in discovereddisks.stdout"
+
+# The below will fail if another disk is added after the fact.
+
+- name: "If populated add blank disks to Logical Volume Group"
+  lvg:
+    vg: discovered
+    pvs: "{{ discovereddisks.stdout_lines.0 }}1"
+  when: "'dev' in discovereddisks.stdout"
+  register: resultvg
+
+- name: "Print vg information"
+  debug:
+    msg: "{{ resultvg }}"
+
+- name: "Add jfrog logical volume to VG"
+  lvol:
+    vg: discovered
+    lv: discoveredlv-jfrog
+    size: 50%VG
+  when: "'dev' in discovereddisks.stdout"
+  register: resultlvj
+
+- name: "Add storage logical volume to VG"
+  lvol:
+    vg: discovered
+    lv: discoveredlv-storage
+    size: 50%VG
+  when: "'dev' in discovereddisks.stdout"
+  register: resultlvs
+
+- name: "Print lvj information"
+  debug:
+    msg: "{{ resultlvj }}"
+
+- name: "Print lvs information"
+  debug:
+    msg: "{{ resultlvj }}"
+
+- name: "Format logical volumes to ext4"
+  filesystem:
+    fstype: ext4
+    dev: "/dev/mapper/discovered-discoveredlv--{{ item }}"
+  with_items:
+    - storage
+    - jfrog
+  when: "'dev' in discovereddisks.stdout"
+
+- name: "Add storage mountpoint"
+  mount:
+    path: /storage
+    src: /dev/mapper/discovered-discoveredlv--storage
+    fstype: ext4
+    state: mounted
+  when: "'dev' in discovereddisks.stdout"
+
+- name: "Add jfrog mountpoint"
+  mount:
+    path: /var/opt/jfrog
+    src: /dev/mapper/discovered-discoveredlv--jfrog
+    fstype: ext4
+    state: mounted
+  when: "'dev' in discovereddisks.stdout"

@@ -1,0 +1,25 @@
+        {# Add local generic repos #}
+        {% for repo in artifactory_role_generic_local_repos %}
+        <localRepository>
+            <key>{{ repo.key }}</key>
+            <type>generic</type>
+            <includesPattern>**/*</includesPattern>
+            <repoLayoutRef>simple-default</repoLayoutRef>
+            <dockerApiVersion>V2</dockerApiVersion>
+            <forceNugetAuthentication>false</forceNugetAuthentication>
+            <blackedOut>false</blackedOut>
+            <handleReleases>true</handleReleases>
+            <handleSnapshots>true</handleSnapshots>
+            <maxUniqueSnapshots>0</maxUniqueSnapshots>
+            <maxUniqueTags>0</maxUniqueTags>
+            <suppressPomConsistencyChecks>true</suppressPomConsistencyChecks>
+            <propertySets>
+                <propertySetRef>artifactory</propertySetRef>
+            </propertySets>
+            <archiveBrowsingEnabled>false</archiveBrowsingEnabled>
+            <snapshotVersionBehavior>unique</snapshotVersionBehavior>
+            <localRepoChecksumPolicyType>client-checksums</localRepoChecksumPolicyType>
+            <calculateYumMetadata>false</calculateYumMetadata>
+            <debianTrivialLayout>false</debianTrivialLayout>
+        </localRepository>
+        {% endfor %}

@@ -1,0 +1,25 @@
+---
+
+- name: "Ensure SSL directory exists"
+  file:
+    dest: "/etc/nginx/ssl"
+    state: directory
+    mode: 0775
+    group: nginx
+    owner: nginx
+
+- name: "Write SSL cert"
+  copy:
+    dest: "{{ ssl_crt_file_location }}"
+    content: "{{ ssl_crt }}"
+  notify:
+    - "check nginx config"
+    # - "restart nginx"
+
+- name: "Write SSL key"
+  copy:
+    dest: "{{ ssl_key_file_location }}"
+    content: "{{ ssl_key }}"
+  notify:
+    - "check nginx config"
+    # - "restart nginx"

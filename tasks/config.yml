@@ -1,0 +1,45 @@
+---
+
+- name: "Global config template"
+  template:
+    src: "default.j2"
+    dest: "/etc/opt/jfrog/artifactory/default"
+    owner: artifactory
+    group: artifactory
+    mode: 0770
+  notify:
+    - "restart artifactory"
+
+- name: "Main config template"
+  template:
+    src: "artifactory.config.import.xml.j2"
+    dest: "/etc/opt/jfrog/artifactory/artifactory.config.import.xml.template"
+    owner: artifactory
+    group: artifactory
+    mode: 0644
+  notify:
+    - "apply main config template"
+    - "restart artifactory"
+
+- name: "System properties config template"
+  template:
+    src: "artifactory.system.properties.j2"
+    dest: "/etc/opt/jfrog/artifactory/artifactory.system.properties"
+    owner: artifactory
+    group: artifactory
+    mode: 0644
+  notify:
+    - restart artifactory
+
+      #- name: "Security config template"
+      #  template:
+      #    src: "security.import.xml.j2"
+      #    dest: "/etc/opt/jfrog/artifactory/security.import.xml.template"
+    #    owner: artifactory
+    #    group: artifactory
+    #    mode: 0644
+    #  notify:
+    #    - "apply security config template"
+    #    - "restart artifactory"
+
+- meta: flush_handlers

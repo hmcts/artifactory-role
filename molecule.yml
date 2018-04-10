@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+  requirements_file: requirements.yml
+driver:
+  name: docker
+docker:
+  containers:
+    - name: artifactory-role-${BRANCH_NAME}-${BUILD_NUMBER}
+      image: centos/systemd
+      image_version: latest
+      build_image: true
+      dockerfile: tests/Dockerfile
+      privileged: yes
+      cap_add:
+        - SYS_ADMIN
+      ansible_groups:
+        - artifactory
+      environment:
+        http_proxy: "http://reformmgmtproxyout.reform.hmcts.net:8080/"
+
+verifier:
+  name: testinfra
+
+ansible:
+  playbook: playbook.yml

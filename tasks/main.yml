@@ -1,0 +1,54 @@
+---
+# tasks file for Artifactory Pro
+
+- name: Sort disks into LVM pool
+  include_tasks: "lvm.yml"
+  when: ansible_virtualization_type != "docker"
+
+- name: Include selinux bits
+  include_tasks: "selinux.yml"
+  when: ansible_virtualization_type != "docker"
+
+- name: Get Artifactory Pro Repo
+  yum_repository:
+    name: ArtifactoryPro
+    description: Artifactory Pro yum repo
+    baseurl: http://jfrog.bintray.com/artifactory-pro-rpms
+    gpgcheck: no
+
+- name: Install artifactory
+  package:
+    name: "jfrog-artifactory-pro"
+    state: present
+
+- name: Include nginx bits
+  include_tasks: "nginx.yml"
+
+- name: Include configuration bits
+  include_tasks: "config.yml"
+
+- name: Start and enable Artifactory
+  service:
+    name: "artifactory"
+    state: started
+    enabled: yes
+
+- name: Pause because Artifactory reports having started incorrectly
+  pause:
+    seconds: 60
+
+- name: Update Admin User
+  include_tasks: "admin.yml"
+
+- name: Pause just in case we caused auth failures in previous step
+  pause:
+    seconds: 3
+
+- name: Include Artifactory license
+  include_tasks: "license.yml"
+
+- name: Include Backup Location Creation
+  include_tasks: "folders.yml"
+
+#- name: Empty trash...
+#  include_tasks: "trash.yml"

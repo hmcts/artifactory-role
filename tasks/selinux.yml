@@ -1,0 +1,7 @@
+---
+
+- name: "Ensure Nginx can proxy to Artifactory"
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes

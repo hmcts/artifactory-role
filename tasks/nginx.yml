@@ -1,0 +1,36 @@
+---
+
+
+- name: Install ngnix
+  package:
+    name: nginx
+    state: present
+
+- name: Install nginx main config
+  template:
+    src: etc/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0600'
+    backup: yes
+
+- name: Install nginx Artifactory template
+  template:
+    src: etc/nginx/conf.d/artifactory.conf.j2
+    dest: /etc/nginx/conf.d/artifactory.conf
+    owner: root
+    group: root
+    mode: '0600'
+    backup: yes
+
+- include_tasks: "proxy_vhost.yml"
+  with_items: "{{ artifactory_role_proxy_vhosts }}"
+
+- include_tasks: "ssl_cert.yml"
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

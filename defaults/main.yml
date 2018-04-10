@@ -1,0 +1,51 @@
+---
+ssl_crt: ""
+ssl_key: ""
+
+ssl_crt_file_location: "/etc/nginx/ssl/artifactory.crt"
+ssl_key_file_location: "/etc/nginx/ssl/artifactory.key"
+
+artifactory_role_enable_ldap: false
+
+# See group_vars for how this is imported from vault.
+artifactory_role_ldap_admin_pass: ""
+artifactory_role_upload_max_size_mb: 130
+
+artifactory_role_admin_pass_inh: "{{ artifactory_role_admin_pass }}"
+artifactory_role_admin_pass_default_inh: "{{ artifactory_role_admin_pass_default }}"
+
+artifactory_role_license_inh: "{{ artifactory_role_license }}"
+
+# Default date (obviously) check group-vars for real date.
+artifactory_license_date: "Dec 31, 1999"
+
+artifactory_role_proxy_vhosts: []
+
+artifactory_role_local_repos: []
+
+artifactory_role_remote_repos: []
+
+artifactory_role_generic_local_repos: []
+
+artifactory_role_generic_remote_repos: []
+
+# Default values, check group-vars for actual settings (per-box basis)
+artifactory_xms_java_options: "-Xms1g"
+artifactory_xmx_java_options: "-Xmx2g"
+
+# Below values imported from vars, probably old, see group_vars for up-to-date.
+postgres_jdbc_url: "http://jdbc.postgresql.org/download/postgresql-9.4-1212.jar"
+
+# Default value, probably out of date, check group-vars for up-to-date version.
+mysql_jdbc_base: "mysql-connector-java-5.1.40"
+mysql_jdbc_url: "http://dev.mysql.com/get/Downloads/Connector-J/{{mysql_jdbc_base}}.tar.gz"
+artifactory_license: "pro"
+
+# Again, don't update here, these are defaults, probably out of date.
+packer_version: "1.1.1"
+terraform_version: "0.11.0"
+
+artifactory_role_ldap_url: ""
+artifactory_role_ldap_DnPattern: ""
+artifactory_role_ldap_searchBase: ""
+artifactory_role_ldap_managerDn: ""

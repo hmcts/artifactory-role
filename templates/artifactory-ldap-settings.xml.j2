@@ -1,0 +1,31 @@
+<ldapSettings>
+    <ldapSetting>
+        <key>ReformLDAP</key>
+        <enabled>true</enabled>
+        <ldapUrl>{{ artifactory_role_ldap_url }}</ldapUrl>
+        <userDnPattern>{{ artifactory_role_ldap_DnPattern }}</userDnPattern>
+        <search>
+            <searchFilter>{{ artifactory_role_ldap_DnPattern }}</searchFilter>
+            <searchBase>{{ artifactory_role_ldap_searchBase }}</searchBase>
+            <searchSubTree>true</searchSubTree>
+            <managerDn>{{ artifactory_role_ldap_managerDn }}</managerDn>
+            <managerPassword>{{ artifactory_role_ldap_admin_pass }}</managerPassword>
+        </search>
+        <autoCreateUser>true</autoCreateUser>
+        <emailAttribute>mail</emailAttribute>
+        <ldapPoisoningProtection>true</ldapPoisoningProtection>
+    </ldapSetting>
+</ldapSettings>
+<ldapGroupSettings>
+    <ldapGroupSetting>
+        <name>Groups</name>
+        <groupBaseDn>ou=groups</groupBaseDn>
+        <groupNameAttribute>cn</groupNameAttribute>
+        <groupMemberAttribute>memberUid</groupMemberAttribute>
+        <subTree>true</subTree>
+        <filter>(objectClass=posixGroup)</filter>
+        <descriptionAttribute>description</descriptionAttribute>
+        <strategy>STATIC</strategy>
+        <enabledLdap>ReformLDAP</enabledLdap>
+    </ldapGroupSetting>
+</ldapGroupSettings>
