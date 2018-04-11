@@ -10,7 +10,7 @@ The box in questions should have a preconfigured LVM setup for root, and a new (
 
 The blank disk will be used for everything else.
 
-Before running this role, the user is advised to read the embedded back snipped (in `tasks/lvm.yml`) and understand what is going on.
+Before running this role, the user is advised to read the embedded back snipped in `tasks/lvm.yml` and understand what is going on.
 
 What is this repo?
 ==================
