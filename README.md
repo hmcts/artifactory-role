@@ -43,6 +43,8 @@ It will only work if you have Vagrant and libvirt set up correctly.
 
 Don't leave it in place, copy the docker one back once you've done your tests.
 
+TODO: Update to Molecule2.
+
 ----
 
 After Artifactory has been started once, the only way to change the configuration (without using API with auth etc which can be complicated by LDAP etc), is to update the file `/etc/opt/jfrog/artifactory/artifactory.config.import.xml` and then restart the service.
