@@ -24,7 +24,7 @@ Bits and pieces could potentially be useful going forward.
 When to run?
 ------------
 
-This role should be run on a vanilla box, prior to it being enabled for use.
+This role should be run on a vanilla box with a large second disk, prior to it being enabled for use.
 
 It can be run subsequently, but may restart Artifactory with certain changes.
 
