@@ -13,7 +13,7 @@ The blank disk will be used for everything else.
 Before running this role, the user is advised to read the embedded back snipped (in `tasks/lvm.yml`) and understand what is going on.
 
 What is this repo?
-==================
+------------------
 
 This is the role used when installing Artifactory in the legacy reform setup.
 
@@ -28,14 +28,14 @@ This role should be run on a vanilla box with a large second disk, prior to it b
 
 It can be run subsequently, but may restart Artifactory with certain changes.
 
-Updating License
-================
+Updating the Artifactory License
+--------------------------------
 
 * Put your new license in Vault.
 * Update the vars in AM (external repo) with the new date of expiry.
 
 Testing
-=======
+-------
 
 To test SELinux and disk changes, you can copy `molecule.yml-vagrant` over `molecule.yml` and perform your tests. This can probably be done using flags inline too.
 
