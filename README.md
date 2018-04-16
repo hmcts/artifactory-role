@@ -37,7 +37,7 @@ Updating License
 Testing
 =======
 
-To test SELinux and disk changes, you can copy `molecule.yml-vagrant` over `molecule.yml` and perform your tests.
+To test SELinux and disk changes, you can copy `molecule.yml-vagrant` over `molecule.yml` and perform your tests. This can probably be done using flags inline too.
 
 It will only work if you have Vagrant and libvirt set up correctly.
 
