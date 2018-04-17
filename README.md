@@ -2,7 +2,7 @@ Artifactory
 ===========
 
 Warning!
-========
+=========
 
 This role makes disk changes, and should only be run against a box built for purpose. If run using Docker (which it shouldn't be) you risk data loss.
 
