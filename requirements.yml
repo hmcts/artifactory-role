@@ -1,6 +1,6 @@
 ---
 - name: java-role
-  src: git@github.com:hmcts/java-role.git
+  src: https://github.com/hmcts/java-role
   scm: git
 
 - name: devops.repos
